@@ -2,57 +2,69 @@ package TrainConsistManagementApp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class UC12 {
+public class UC13 {
 
-    // Goods Bogie model
-    static class GoodsBogie {
+    // Bogie model
+    static class Bogie {
         String type;
-        String cargo;
+        int capacity;
 
-        GoodsBogie(String type, String cargo) {
+        Bogie(String type, int capacity) {
             this.type = type;
-            this.cargo = cargo;
-        }
-
-        @Override
-        public String toString() {
-            return type + " (" + cargo + ")";
+            this.capacity = capacity;
         }
     }
 
     public static void main(String[] args) {
 
         System.out.println("===============================================");
-        System.out.println("UC12 - Safety Compliance Check for Goods Bogies");
+        System.out.println("UC13 - Performance Comparison (Loops vs Streams)");
         System.out.println("===============================================\n");
 
-        // Create goods bogie list
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        // Create large dataset
+        List<Bogie> bogies = new ArrayList<>();
 
-        goodsBogies.add(new GoodsBogie("Closed", "Hazardous"));
-        goodsBogies.add(new GoodsBogie("Open", "Coal"));
-        goodsBogies.add(new GoodsBogie("Closed", "Chemicals"));
-        goodsBogies.add(new GoodsBogie("Closed", "Hazardous"));
-
-        // Display bogies
-        System.out.println("Goods Bogies:");
-        for (GoodsBogie g : goodsBogies) {
-            System.out.println(g);
+        for (int i = 1; i <= 100000; i++) {
+            bogies.add(new Bogie("Type" + i, i % 100));
         }
 
-        // ---- SAFETY CHECK using allMatch ----
-        boolean isSafe = goodsBogies.stream()
-                .allMatch(g ->
-                        !g.cargo.equalsIgnoreCase("Hazardous") ||
-                                g.type.equalsIgnoreCase("Closed")
-                );
+        // ---- LOOP FILTERING ----
+        long startLoop = System.nanoTime();
 
-        // ---- OUTPUT ----
-        if (isSafe) {
-            System.out.println("\nAll bogies comply with safety rules.");
+        List<Bogie> loopResult = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.capacity >= 50) {
+                loopResult.add(b);
+            }
+        }
+
+        long endLoop = System.nanoTime();
+        long loopTime = endLoop - startLoop;
+
+        // ---- STREAM FILTERING ----
+        long startStream = System.nanoTime();
+
+        List<Bogie> streamResult = bogies.stream()
+                .filter(b -> b.capacity >= 50)
+                .collect(Collectors.toList());
+
+        long endStream = System.nanoTime();
+        long streamTime = endStream - startStream;
+
+        // ---- RESULTS ----
+        System.out.println("Loop result size: " + loopResult.size());
+        System.out.println("Stream result size: " + streamResult.size());
+
+        System.out.println("\nLoop Time (ns): " + loopTime);
+        System.out.println("Stream Time (ns): " + streamTime);
+
+        // ---- COMPARISON ----
+        if (loopTime < streamTime) {
+            System.out.println("\nLoop is faster.");
         } else {
-            System.out.println("\nSafety violation detected!");
+            System.out.println("\nStream is faster.");
         }
     }
 }
