@@ -2,11 +2,10 @@ package TrainConsistManagementApp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class UC8 {
+public class UC10 {
 
-    // Reusing Bogie model from UC7
+    // Reusing Bogie model
     static class Bogie {
         String name;
         int capacity;
@@ -25,24 +24,29 @@ public class UC8 {
     public static void main(String[] args) {
 
         System.out.println("===============================================");
-        System.out.println("UC8 - Filter Passenger Bogies Using Streams");
+        System.out.println("UC10 - Count Total Seats in Train");
         System.out.println("===============================================\n");
 
-        // Create list of passenger bogies
+        // Create list of bogies
         List<Bogie> bogies = new ArrayList<>();
 
-        bogies.add(new Bogie("B1", 50));
-        bogies.add(new Bogie("B2", 70));
-        bogies.add(new Bogie("B3", 60));
-        bogies.add(new Bogie("B4", 40));
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 55));
+        bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("Sleeper", 70));
 
-        // ---- FILTER bogies with capacity >= 60 ----
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.capacity >= 60)
-                .collect(Collectors.toList());
+        // Display bogies
+        System.out.println("Bogies in Train:");
+        for (Bogie b : bogies) {
+            System.out.println(b);
+        }
 
-        // ---- DISPLAY result ----
-        System.out.println("All bogies: " + bogies);
-        System.out.println("Filtered bogies (capacity >= 60): " + filteredBogies);
+        // ---- AGGREGATE using reduce ----
+        int totalSeats = bogies.stream()
+                .map(b -> b.capacity)     // extract capacity
+                .reduce(0, Integer::sum); // sum all values
+
+        // Display total
+        System.out.println("\nTotal seating capacity: " + totalSeats);
     }
 }
