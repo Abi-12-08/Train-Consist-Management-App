@@ -1,40 +1,46 @@
 package TrainConsistManagementApp;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
-public class UC2 {
+public class UC11 {
 
     public static void main(String[] args) {
 
         System.out.println("===============================================");
-        System.out.println("UC2 - Add Passenger Bogies to Train");
+        System.out.println("UC11 - Validate Train ID and Cargo Code");
         System.out.println("===============================================\n");
 
-        // Create an ArrayList to hold passenger bogies
-        List<String> passengerBogies = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
 
-        // -------- CREATE (Add bogies) --------
-        passengerBogies.add("Bogie1");
-        passengerBogies.add("Bogie2");
-        passengerBogies.add("Bogie3");
+        // Accept input
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainId = scanner.nextLine();
 
-        System.out.println("After adding bogies: " + passengerBogies);
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
 
-        // -------- DELETE (Remove bogie) --------
-        passengerBogies.remove("Bogie2");
+        // ---- REGEX RULES ----
+        String trainPattern = "TRN-\\d{4}";
+        String cargoPattern = "[A-Z]{3}-[A-Z]{2}";
 
-        System.out.println("After removing Bogie2: " + passengerBogies);
+        // ---- VALIDATION ----
+        boolean isTrainValid = Pattern.matches(trainPattern, trainId);
+        boolean isCargoValid = Pattern.matches(cargoPattern, cargoCode);
 
-        // -------- READ (Check availability) --------
-        if (passengerBogies.contains("Bogie1")) {
-            System.out.println("Bogie1 is available in the train.");
+        // ---- OUTPUT ----
+        if (isTrainValid) {
+            System.out.println("Train ID is valid.");
         } else {
-            System.out.println("Bogie1 is NOT available.");
+            System.out.println("Train ID is INVALID.");
         }
 
-        // -------- FINAL STATE --------
-        System.out.println("Final train consist: " + passengerBogies);
-        System.out.println("Total bogies: " + passengerBogies.size());
+        if (isCargoValid) {
+            System.out.println("Cargo Code is valid.");
+        } else {
+            System.out.println("Cargo Code is INVALID.");
+        }
+
+        scanner.close();
     }
 }
