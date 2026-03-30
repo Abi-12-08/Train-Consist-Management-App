@@ -3,7 +3,7 @@ package TrainConsistManagementApp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UC11 {
+public class UC12 {
 
     // Reusing Bogie model
     static class Bogie {
